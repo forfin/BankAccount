@@ -8,7 +8,9 @@
 
 namespace App\Model\Account;
 
+use App\Model\Account\Event\AccountWasDeposit;
 use App\Model\Account\Event\AccountWasRegistered;
+use App\Model\Account\Event\AccountWasWithdraw;
 use Prooph\EventSourcing\AggregateChanged;
 use Prooph\EventSourcing\AggregateRoot;
 
@@ -33,6 +35,16 @@ class Account extends AggregateRoot
         $self->recordThat(AccountWasRegistered::withData($accountNumber, $name));
 
         return $self;
+    }
+
+    public function deposit(float $amount)
+    {
+        $this->recordThat(AccountWasDeposit::withData($this->accountNumber, $amount));
+    }
+
+    public function withdraw(float $amount)
+    {
+        $this->recordThat(AccountWasWithdraw::withData($this->accountNumber, $amount));
     }
 
     protected function aggregateId(): string
