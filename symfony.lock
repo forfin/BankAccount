@@ -1,4 +1,37 @@
 {
+    "beberlei/assert": {
+        "version": "v3.2.0"
+    },
+    "marc-mabe/php-enum": {
+        "version": "v3.0.2"
+    },
+    "prooph/common": {
+        "version": "v4.3.0"
+    },
+    "prooph/event-sourcing": {
+        "version": "v5.6.0"
+    },
+    "prooph/event-store": {
+        "version": "v7.5.0"
+    },
+    "prooph/event-store-symfony-bundle": {
+        "version": "0.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "0.4",
+            "ref": "54606aa996190da9a01cd533ad66a14a37d9b92b"
+        }
+    },
+    "prooph/pdo-event-store": {
+        "version": "1.7",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "1.7",
+            "ref": "88c30218d5ef74ede65ae40fc8e4ec9558ec2b65"
+        }
+    },
     "psr/cache": {
         "version": "1.0.1"
     },
@@ -10,6 +43,9 @@
     },
     "psr/simple-cache": {
         "version": "1.0.1"
+    },
+    "ramsey/uuid": {
+        "version": "3.8.0"
     },
     "symfony/cache": {
         "version": "v4.2.2"
