@@ -9,7 +9,9 @@
 namespace App\Projection\Account;
 
 
+use App\Model\Account\Event\AccountWasDeposit;
 use App\Model\Account\Event\AccountWasRegistered;
+use App\Model\Account\Event\AccountWasWithdraw;
 use Prooph\Bundle\EventStore\Projection\ReadModelProjection;
 use Prooph\EventStore\Projection\ReadModelProjector;
 
@@ -28,6 +30,20 @@ final class AccountProjection implements ReadModelProjection
                         'account_number' => $event->accountNumber(),
                         'name' => $event->name(),
                     ]);
+                },
+                AccountWasDeposit::class => function ($state, AccountWasDeposit $event) {
+                    /**
+                     * @var AccountReadModel $readModel
+                     */
+                    $readModel = $this->readModel();
+                    $readModel->stack('deposit', $event->accountNumber(), $event->amount());
+                },
+                AccountWasWithdraw::class => function ($state, AccountWasWithdraw $event) {
+                    /**
+                     * @var AccountReadModel $readModel
+                     */
+                    $readModel = $this->readModel();
+                    $readModel->stack('withdraw', $event->accountNumber(), $event->amount());
                 }
             ]);
 
