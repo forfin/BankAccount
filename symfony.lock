@@ -2,6 +2,15 @@
     "beberlei/assert": {
         "version": "v3.2.0"
     },
+    "doctrine/cache": {
+        "version": "v1.8.0"
+    },
+    "doctrine/dbal": {
+        "version": "v2.9.2"
+    },
+    "doctrine/event-manager": {
+        "version": "v1.0.0"
+    },
     "marc-mabe/php-enum": {
         "version": "v3.0.2"
     },
