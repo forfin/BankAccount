@@ -1,3 +1,6 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
+command::register-account:
+  path: /commands/register-account
+  defaults: { _controller: App\Controller\CommandController:command, command_name: 'App\Model\Command\RegisterAccount' }
