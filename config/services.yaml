@@ -26,5 +26,8 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    Prooph\ServiceBus\CommandBus:
-        class: Prooph\ServiceBus\CommandBus
+    App\Model\Handler\Account\RegisterAccountHandler:
+        tags:
+            - { name: 'prooph_service_bus.default_command_bus.route_target', message_detection: true }
+
+    App\Service\EventStoreAccountCollection: '@account_collection'

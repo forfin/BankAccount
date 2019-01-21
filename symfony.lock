@@ -2,14 +2,53 @@
     "beberlei/assert": {
         "version": "v3.2.0"
     },
+    "doctrine/annotations": {
+        "version": "1.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "1.0",
+            "ref": "cb4152ebcadbe620ea2261da1a1c5a9b8cea7672"
+        }
+    },
     "doctrine/cache": {
         "version": "v1.8.0"
+    },
+    "doctrine/collections": {
+        "version": "v1.5.0"
     },
     "doctrine/dbal": {
         "version": "v2.9.2"
     },
+    "doctrine/doctrine-bundle": {
+        "version": "1.6",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "1.6",
+            "ref": "453e89b78ded666f351617baca5ae40d20622351"
+        }
+    },
+    "doctrine/doctrine-cache-bundle": {
+        "version": "1.3.5"
+    },
     "doctrine/event-manager": {
         "version": "v1.0.0"
+    },
+    "doctrine/inflector": {
+        "version": "v1.3.0"
+    },
+    "doctrine/lexer": {
+        "version": "v1.0.1"
+    },
+    "doctrine/persistence": {
+        "version": "v1.1.0"
+    },
+    "doctrine/reflection": {
+        "version": "v1.0.0"
+    },
+    "jdorn/sql-formatter": {
+        "version": "v1.2.17"
     },
     "marc-mabe/php-enum": {
         "version": "v3.0.2"
@@ -43,6 +82,15 @@
     },
     "prooph/service-bus": {
         "version": "v6.2.2"
+    },
+    "prooph/service-bus-symfony-bundle": {
+        "version": "0.6",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "0.6",
+            "ref": "ba474153d2fa28a44e91cbe27fddf1c0f572988c"
+        }
     },
     "psr/cache": {
         "version": "1.0.1"
@@ -81,6 +129,9 @@
         "version": "v4.2.2"
     },
     "symfony/dependency-injection": {
+        "version": "v4.2.2"
+    },
+    "symfony/doctrine-bridge": {
         "version": "v4.2.2"
     },
     "symfony/dotenv": {

@@ -2,6 +2,11 @@ prooph_event_store:
     stores:
         default:
             event_store: 'app.event_store.default'
+            repositories:
+                account_collection:
+                    repository_class: App\Service\EventStoreAccountCollection
+                    aggregate_type: App\Model\Account\Account
+                    aggregate_translator: Prooph\EventSourcing\EventStoreIntegration\AggregateTranslator
 
 services:
     _defaults:
