@@ -22,6 +22,18 @@ services:
       - ./:/var/www
     command: bash -c "a2enmod rewrite && apt-get update && apt-get install -y libpq-dev && docker-php-ext-install pdo_mysql pdo_pgsql && apache2-foreground"
 
+  database:
+    image: mysql:5.7
+    volumes:
+      - ./database:/var/lib/mysql
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+      MYSQL_DATABASE: bank_account
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: password
+    ports:
+      - 33060:3306
+
 #  projection_todo:
 #    image: prooph/php:7.1-cli
 #    entrypoint:

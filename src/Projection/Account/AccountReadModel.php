@@ -35,9 +35,9 @@ CREATE TABLE `$tableName` (
   `account_number` varchar(36) COLLATE utf8_unicode_ci NOT NULL,
   `name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `total_amount` real COLLATE utf8_unicode_ci NOT NULL,
-  `transaction` JSON utf8_unicode_ci,
+  `transaction` JSON,
   PRIMARY KEY (`account_number`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+);
 EOT;
 
         $statement = $this->connection->prepare($sql);

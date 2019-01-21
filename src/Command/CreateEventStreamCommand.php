@@ -18,6 +18,7 @@ final class CreateEventStreamCommand extends ContainerAwareCommand
     public function __construct(EventStore $eventStore)
     {
         $this->eventStore = $eventStore;
+        parent::__construct();
     }
 
     protected function configure()

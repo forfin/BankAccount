@@ -29,6 +29,7 @@ final class AccountProjection implements ReadModelProjection
                     $readModel->stack('insert', [
                         'account_number' => $event->accountNumber(),
                         'name' => $event->name(),
+                        'total_amount' => 0,
                     ]);
                 },
                 AccountWasDeposit::class => function ($state, AccountWasDeposit $event) {

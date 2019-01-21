@@ -23,13 +23,21 @@ class AccountWasRegistered extends AggregateChanged
      */
     private $accountNumber;
 
-    public function name()
+    public function name(): string
     {
+        if (null === $this->name) {
+            $this->name = $this->payload['name'];
+        }
+
         return $this->name;
     }
 
-    public function accountNumber()
+    public function accountNumber(): string
     {
+        if (null === $this->accountNumber) {
+            $this->accountNumber = $this->aggregateId();
+        }
+
         return $this->accountNumber;
     }
 

@@ -33,6 +33,7 @@ class Account extends AggregateRoot
         $self = new self();
 
         $self->recordThat(AccountWasRegistered::withData($accountNumber, $name));
+        $self->accountNumber = $accountNumber;
 
         return $self;
     }
