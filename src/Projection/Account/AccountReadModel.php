@@ -128,6 +128,8 @@ EOT;
 
         $oldAmount = $account->total_amount;
 
+        $amount = $amount * -1;
+
         $this->updateTable($accountNumber, $oldAmount, $amount, 'w', $time);
     }
 

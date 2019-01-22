@@ -10,8 +10,8 @@ namespace App\Model\Handler\Account;
 
 
 use App\Model\Account\AccountCollection;
-use App\Model\Account\Event\AccountWasDeposit;
 use App\Model\Account\Exception\AccountNotFound;
+use App\Model\Command\WithdrawAccount;
 
 class WithdrawAccountHandler
 {
@@ -25,7 +25,7 @@ class WithdrawAccountHandler
         $this->accountCollection = $accountCollection;
     }
 
-    public function __invoke(AccountWasDeposit $command): void
+    public function __invoke(WithdrawAccount $command): void
     {
         $account = $this->accountCollection->get($command->accountNumber());
 

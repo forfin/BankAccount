@@ -82,4 +82,9 @@ class Account extends AggregateRoot
     {
 
     }
+
+    protected function whenAccountWasWithdraw(AccountWasWithdraw $event)
+    {
+
+    }
 }

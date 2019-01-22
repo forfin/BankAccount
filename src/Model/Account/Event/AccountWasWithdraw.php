@@ -38,11 +38,19 @@ class AccountWasWithdraw extends AggregateChanged
 
     public function accountNumber()
     {
+        if (null === $this->accountNumber) {
+            $this->accountNumber = $this->aggregateId();
+        }
+
         return $this->accountNumber;
     }
 
     public function amount()
     {
+        if (null === $this->amount) {
+            $this->amount = $this->payload['amount'];
+        }
+
         return $this->amount;
     }
 }

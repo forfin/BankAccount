@@ -34,4 +34,8 @@ services:
         tags:
             - { name: 'prooph_service_bus.default_command_bus.route_target', message_detection: true }
 
+    App\Model\Handler\Account\WithdrawAccountHandler:
+        tags:
+            - { name: 'prooph_service_bus.default_command_bus.route_target', message_detection: true }
+
     App\Service\EventStoreAccountCollection: '@account_collection'
