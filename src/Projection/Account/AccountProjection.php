@@ -37,14 +37,14 @@ final class AccountProjection implements ReadModelProjection
                      * @var AccountReadModel $readModel
                      */
                     $readModel = $this->readModel();
-                    $readModel->stack('deposit', $event->accountNumber(), $event->amount());
+                    $readModel->stack('deposit', $event->accountNumber(), $event->amount(), $event->createdAt());
                 },
                 AccountWasWithdraw::class => function ($state, AccountWasWithdraw $event) {
                     /**
                      * @var AccountReadModel $readModel
                      */
                     $readModel = $this->readModel();
-                    $readModel->stack('withdraw', $event->accountNumber(), $event->amount());
+                    $readModel->stack('withdraw', $event->accountNumber(), $event->amount(), $event->createdAt());
                 }
             ]);
 

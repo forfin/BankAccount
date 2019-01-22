@@ -32,7 +32,7 @@ class AccountFinder
 
     public function findByAccountNumber(string $accountNumber): ?\stdClass
     {
-        $stmt = $this->connection->prepare(\sprintf('SELECT * FROM %s WHERE id = :user_id', Table::ACCOUNT));
+        $stmt = $this->connection->prepare(\sprintf('SELECT * FROM %s WHERE account_number = :account_number', Table::ACCOUNT));
         $stmt->bindValue('account_number', $accountNumber);
         $stmt->execute();
 

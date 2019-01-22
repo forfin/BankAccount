@@ -21,9 +21,15 @@ class AccountReadModel extends AbstractReadModel
      */
     private $connection;
 
-    public function __construct(Connection $connection)
+    /**
+     * @var AccountFinder
+     */
+    private $accountFinder;
+
+    public function __construct(Connection $connection, AccountFinder $accountFinder)
     {
         $this->connection = $connection;
+        $this->accountFinder = $accountFinder;
     }
 
     public function init(): void
@@ -35,8 +41,24 @@ CREATE TABLE `$tableName` (
   `account_number` varchar(36) COLLATE utf8_unicode_ci NOT NULL,
   `name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `total_amount` real COLLATE utf8_unicode_ci NOT NULL,
-  `transaction` JSON,
   PRIMARY KEY (`account_number`)
+);
+EOT;
+        $statement = $this->connection->prepare($sql);
+        $statement->execute();
+
+        $tableName = Table::TRANSACTION;
+
+        $sql = <<<EOT
+CREATE TABLE `$tableName` (
+  `entity_id` int NOT NULL AUTO_INCREMENT,
+  `account_number` varchar(36) COLLATE utf8_unicode_ci NOT NULL,
+  `type` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `old_amount` real COLLATE utf8_unicode_ci NOT NULL,
+  `adjusting_amount` real COLLATE utf8_unicode_ci NOT NULL,
+  `new_amount` real COLLATE utf8_unicode_ci NOT NULL,
+  `time` datetime NOT NULL,
+  PRIMARY KEY (`entity_id`)
 );
 EOT;
 
@@ -64,9 +86,11 @@ EOT;
 
     public function reset(): void
     {
-        $tableName = Table::ACCOUNT;
+        $tableAccount = Table::ACCOUNT;
+        $tableTransaction = Table::TRANSACTION;
 
-        $sql = "TRUNCATE TABLE $tableName;";
+        $sql = "TRUNCATE TABLE $tableAccount;";
+        $sql .= "TRUNCATE TABLE $tableTransaction;";
 
         $statement = $this->connection->prepare($sql);
         $statement->execute();
@@ -74,9 +98,11 @@ EOT;
 
     public function delete(): void
     {
-        $tableName = Table::ACCOUNT;
+        $tableAccount = Table::ACCOUNT;
+        $tableTransaction = Table::TRANSACTION;
 
-        $sql = "DROP TABLE $tableName;";
+        $sql = "DROP TABLE $tableAccount;";
+        $sql .= "DROP TABLE $tableTransaction;";
 
         $statement = $this->connection->prepare($sql);
         $statement->execute();
@@ -87,41 +113,50 @@ EOT;
         $this->connection->insert(Table::ACCOUNT, $data);
     }
 
-    protected function deposit(string $accountNumber, float $amount): void
+    protected function deposit(string $accountNumber, float $amount, \DateTimeImmutable $time): void
     {
-        $transactionJson = json_encode([
-            'type' => 'deposit',
-            'amount' => $amount
-        ]);
+        $account = $this->accountFinder->findByAccountNumber($accountNumber);
 
-        $this->updateTable($accountNumber, $amount, $transactionJson);
+        $oldAmount = $account->total_amount;
+
+        $this->updateTable($accountNumber, $oldAmount, $amount, 'd', $time);
     }
 
-    protected function withdraw(string $accountNumber, float $amount): void
+    protected function withdraw(string $accountNumber, float $amount, \DateTimeImmutable $time): void
     {
-        $transactionJson = json_encode([
-            'type' => 'withdraw',
-            'amount' => $amount
-        ]);
+        $account = $this->accountFinder->findByAccountNumber($accountNumber);
 
-        $this->updateTable($accountNumber, $amount, $transactionJson);
+        $oldAmount = $account->total_amount;
+
+        $this->updateTable($accountNumber, $oldAmount, $amount, 'w', $time);
     }
 
-    private function updateTable(string $accountNumber, float $amount, string $transactionJson): void
+    private function updateTable(string $accountNumber, float $oldAmount, float $amount, string $type, \DateTimeImmutable $time): void
     {
         $tableName = Table::ACCOUNT;
+
+        $newAmount = $oldAmount + $amount;
+
         $sql = <<<SQL
-        UPDATE ``$tableName`` SET 
-          `transaction` = JSON_MODIFY(`transaction`, 'append $', JSON_QUERY(N'$transactionJson')),
-          `total_amount` = `total_amount` + :amount
-        WHERE `account_number` = :account_number
+        UPDATE `{$tableName}` SET 
+          `total_amount` = {$newAmount}
+        WHERE `account_number` = :account_number;
 SQL;
+
         $stmt = $this->connection->prepare($sql);
 
         $stmt->bindValue('account_number', $accountNumber);
-        $stmt->bindValue('amount', $amount);
 
         $stmt->execute();
+
+        $this->connection->insert(Table::TRANSACTION, [
+            'account_number' => $accountNumber,
+            'type' => $type,
+            'old_amount' => $oldAmount,
+            'adjusting_amount' => $amount,
+            'new_amount' => $newAmount,
+            'time' => $time->format('Y-m-d H:i:s'),
+        ]);
     }
 
 }

@@ -12,4 +12,5 @@ namespace App\Projection;
 final class Table
 {
     const ACCOUNT = 'read_account';
+    const TRANSACTION = 'read_transaction';
 }
