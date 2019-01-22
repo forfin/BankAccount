@@ -4,3 +4,7 @@
 command::register-account:
   path: /commands/register-account
   defaults: { _controller: App\Controller\CommandController:command, command_name: 'App\Model\Command\RegisterAccount' }
+
+command::deposit:
+  path: /commands/deposit
+  defaults: { _controller: App\Controller\CommandController:command, command_name: 'App\Model\Command\DepositAccount' }

@@ -33,8 +33,10 @@ class DepositAccount extends Command implements PayloadConstructable
         Assertion::keyExists($payload, 'account_number');
         Assertion::string($payload['account_number']);
         Assertion::keyExists($payload, 'amount');
-        Assertion::float($payload, 'amount');
-        Assertion::greaterThan($payload, 0);
+
+        $payload['amount'] = (float) $payload['amount'];
+        Assertion::float($payload['amount']);
+        Assertion::greaterThan($payload['amount'], 0);
 
         $this->payload = $payload;
     }
