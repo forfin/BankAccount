@@ -22,15 +22,9 @@ class AccountReadModel extends AbstractReadModel
      */
     private $connection;
 
-    /**
-     * @var AccountCollection
-     */
-    private $accountCollection;
-
-    public function __construct(Connection $connection, AccountCollection $accountFinder)
+    public function __construct(Connection $connection)
     {
         $this->connection = $connection;
-        $this->accountCollection = $accountFinder;
     }
 
     public function init(): void
