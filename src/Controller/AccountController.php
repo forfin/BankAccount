@@ -10,7 +10,7 @@ namespace App\Controller;
 
 
 use App\Projection\Account\AccountFinder;
-use App\Projection\Account\TransactionFinder;
+use App\Projection\Transaction\TransactionFinder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AccountController

@@ -2,19 +2,18 @@
 /**
  * BankAccount
  * User: poraphitchuesook
- * Date: 2019-01-17
- * Time: 12:52
+ * Date: 2019-01-22
+ * Time: 17:22
  */
 
-namespace App\Projection\Account;
+namespace App\Projection\Transaction;
 
 
-use App\Model\Account\AccountCollection;
 use App\Projection\Table;
 use Doctrine\DBAL\Connection;
 use Prooph\EventStore\Projection\AbstractReadModel;
 
-class AccountReadModel extends AbstractReadModel
+class TransactionReadModel extends AbstractReadModel
 {
 
     /**
@@ -22,36 +21,36 @@ class AccountReadModel extends AbstractReadModel
      */
     private $connection;
 
-    /**
-     * @var AccountCollection
-     */
-    private $accountCollection;
-
-    public function __construct(Connection $connection, AccountCollection $accountFinder)
+    public function __construct(Connection $connection)
     {
         $this->connection = $connection;
-        $this->accountCollection = $accountFinder;
     }
 
     public function init(): void
     {
-        $tableName = Table::ACCOUNT;
+
+        $tableName = Table::TRANSACTION;
 
         $sql = <<<EOT
 CREATE TABLE `$tableName` (
+  `entity_id` int NOT NULL AUTO_INCREMENT,
   `account_number` varchar(36) COLLATE utf8_unicode_ci NOT NULL,
-  `name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  `total_amount` real COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`account_number`)
+  `type` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `old_amount` real COLLATE utf8_unicode_ci NOT NULL,
+  `adjusting_amount` real COLLATE utf8_unicode_ci NOT NULL,
+  `new_amount` real COLLATE utf8_unicode_ci NOT NULL,
+  `time` datetime NOT NULL,
+  PRIMARY KEY (`entity_id`)
 );
 EOT;
+
         $statement = $this->connection->prepare($sql);
         $statement->execute();
     }
 
     public function isInitialized(): bool
     {
-        $tableName = Table::ACCOUNT;
+        $tableName = Table::TRANSACTION;
 
         $sql = "SHOW TABLES LIKE '$tableName';";
 
@@ -69,9 +68,9 @@ EOT;
 
     public function reset(): void
     {
-        $tableAccount = Table::ACCOUNT;
+        $tableTransaction = Table::TRANSACTION;
 
-        $sql = "TRUNCATE TABLE $tableAccount;";
+        $sql = "TRUNCATE TABLE $tableTransaction;";
 
         $statement = $this->connection->prepare($sql);
         $statement->execute();
@@ -79,48 +78,38 @@ EOT;
 
     public function delete(): void
     {
-        $tableAccount = Table::ACCOUNT;
+        $tableTransaction = Table::TRANSACTION;
 
-        $sql = "DROP TABLE $tableAccount;";
+        $sql = "DROP TABLE $tableTransaction;";
 
         $statement = $this->connection->prepare($sql);
         $statement->execute();
     }
 
-    protected function insert(array $data): void
-    {
-        $this->connection->insert(Table::ACCOUNT, $data);
-    }
-
     protected function deposit(string $accountNumber, float $amount, \DateTimeImmutable $time, float $oldAmount): void
     {
-        $this->updateTable($accountNumber, $oldAmount, $amount);
+        $this->updateTable($accountNumber, $oldAmount, $amount, 'd', $time);
     }
 
     protected function withdraw(string $accountNumber, float $amount, \DateTimeImmutable $time, float $oldAmount): void
     {
         $amount = $amount * -1;
 
-        $this->updateTable($accountNumber, $oldAmount, $amount);
+        $this->updateTable($accountNumber, $oldAmount, $amount, 'w', $time);
     }
 
-    private function updateTable(string $accountNumber, float $oldAmount, float $amount): void
+    private function updateTable(string $accountNumber, float $oldAmount, float $amount, string $type, \DateTimeImmutable $time): void
     {
-        $tableName = Table::ACCOUNT;
-
         $newAmount = $oldAmount + $amount;
 
-        $sql = <<<SQL
-        UPDATE `{$tableName}` SET 
-          `total_amount` = {$newAmount}
-        WHERE `account_number` = :account_number;
-SQL;
-
-        $stmt = $this->connection->prepare($sql);
-
-        $stmt->bindValue('account_number', $accountNumber);
-
-        $stmt->execute();
+        $this->connection->insert(Table::TRANSACTION, [
+            'account_number' => $accountNumber,
+            'type' => $type,
+            'old_amount' => $oldAmount,
+            'adjusting_amount' => $amount,
+            'new_amount' => $newAmount,
+            'time' => $time->format('Y-m-d H:i:s'),
+        ]);
     }
 
 }

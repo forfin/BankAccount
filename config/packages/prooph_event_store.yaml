@@ -16,6 +16,9 @@ prooph_event_store:
                 account_projection:
                     read_model: App\Projection\Account\AccountReadModel
                     projection: App\Projection\Account\AccountProjection
+                transaction_projection:
+                    read_model: App\Projection\Transaction\TransactionReadModel
+                    projection: App\Projection\Transaction\TransactionProjection
 
 services:
     _defaults:

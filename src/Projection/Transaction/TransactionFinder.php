@@ -6,7 +6,7 @@
  * Time: 14:42
  */
 
-namespace App\Projection\Account;
+namespace App\Projection\Transaction;
 
 
 use App\Projection\Table;
