@@ -26,6 +26,11 @@ class Account extends AggregateRoot
      */
     private $accountNumber;
 
+    /**
+     * @var float
+     */
+    private $balance = 0;
+
     public static function registerWithData(
         string $accountNumber,
         string $name
@@ -46,6 +51,11 @@ class Account extends AggregateRoot
     public function withdraw(float $amount)
     {
         $this->recordThat(AccountWasWithdraw::withData($this->accountNumber, $amount));
+    }
+
+    public function balance(): float
+    {
+        return $this->balance;
     }
 
     protected function aggregateId(): string
@@ -80,11 +90,11 @@ class Account extends AggregateRoot
 
     protected function whenAccountWasDeposit(AccountWasDeposit $event)
     {
-
+        $this->balance += $event->amount();
     }
 
     protected function whenAccountWasWithdraw(AccountWasWithdraw $event)
     {
-
+        $this->balance -= $event->amount();
     }
 }
