@@ -12,3 +12,11 @@ command::deposit:
 command::withdraw:
   path: /commands/withdraw
   defaults: { _controller: App\Controller\CommandController:command, command_name: 'App\Model\Command\WithdrawAccount' }
+
+account:show:
+  path: /account/show/{accountNumber}
+  controller: App\Controller\AccountController::show
+
+account:transactions:
+  path: /account/transactions/{accountNumber}
+  controller: App\Controller\AccountController::transactions
